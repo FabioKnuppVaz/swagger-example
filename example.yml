@@ -1,73 +1,144 @@
 openapi: 3.0.3
 
 info:
-  title: Swagger Petstore - OpenAPI 3.0
-  description: |-
-    Teste
-  termsOfService: http://swagger.io/terms/
-  contact:
-    email: apiteam@swagger.io
-  license:
-    name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: Agenda
   version: 1.0.11
 
 externalDocs:
-  description: Find out more about Swagger
+  description: Documentacao
   url: http://swagger.io
 
 servers:
-  - url: https://petstore3.swagger.io/api/v3
+  - url: https://localhost:8080
 
 tags:
-  - name: pet
-    description: Everything about your Pets
-    externalDocs:
-      description: Find out more
-      url: http://swagger.io
+  - name: pessoa
+    description: Gerenciamento de pessoas
 
 paths:
-  /pet:
-    post:
+  /pessoa:
+    get:
       tags:
-        - pet
-      summary: Add a new pet to the store
-      description: Add a new pet to the store
-      operationId: addPet
-      requestBody:
-        description: Create a new pet in the store
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Pet'
-        required: true
+        - pessoa
       responses:
         '200':
-          description: Successful operation
+          description: Sucesso
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Pet'          
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pessoa'
+        '400':
+          description: ID invalido
+        '404':
+          description: Pessoa nao encontrada
+    post:
+      tags:
+        - pessoa
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PessoaDto'
+      responses:
+        '200':
+          description: Sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pessoa'
         '405':
-          description: Invalid input
+          description: Entrada invalida
+  /pessoa/{id}:
+    get:
+      tags:
+        - pessoa
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PessoaDto'
+        '400':
+          description: ID invalido
+        '404':
+          description: Pessoa nao encontrada
+    put:
+      tags:
+        - pessoa
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PessoaDto'
+      responses:
+        '200':
+          description: Sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PessoaDto'
+        '400':
+          description: ID invalido
+        '404':
+          description: Pessoa nao encontrada
+        '405':
+          description: Entrada invalida
+    delete:
+      tags:
+        - pessoa
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Sucesso
+        '400':
+          description: ID invalido
 
 components:
   schemas:
-    Pet:
-      required:
-        - name
+    Pessoa:
       type: object
       properties:
         id:
           type: integer
-          format: int64
-          example: 10
-
-  requestBodies:
-    Pet:
-      description: Pet object that needs to be added to the store
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Pet'
-
+          format: int32
+        nome:
+          type: string
+        telefone:
+          type: string
+        email:
+          type: string
+        aniversario:
+          type: string
+          format: date
+    PessoaDto:
+      type: object
+      properties:
+        nome:
+          type: string
+        telefone:
+          type: string
+        email:
+          type: string
+        aniversario:
+          type: string
+          format: date
